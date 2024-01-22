@@ -50,7 +50,7 @@ public class DefaultConfigDialog extends JPanel {
 	 */
 	private JTextField selectedFile = new JFormattedTextField(new FilePathFormatterFactory(), Objects.toString(ConfigLoader.getDefaultConfig(), ""));
 
-	private Map<String, String> availableLanguageMaps = Translator.getAvailableLanguageMaps();
+	private static Map<String, String> availableLanguageMaps = Translator.getAvailableLanguageMaps();
 
     /*
     * The dropdown list of default language.
@@ -106,7 +106,7 @@ public class DefaultConfigDialog extends JPanel {
 			switch (Dialog.showDialog(dialog, new String[]{"Save", "Remove Default Config", "Cancel"})) {
 				case 0:
 					ConfigLoader.setDefaultConfig(Paths.get(dialog.selectedFile.getText()));
-					ConfigLoader.setDefaultLanguage(Locale.forLanguageTag((String) dialog.selectedLanguage.getSelectedItem()));
+                    ConfigLoader.setDefaultLanguage(Locale.forLanguageTag(availableLanguageMaps.get((String) dialog.selectedLanguage.getSelectedItem())));
 					break;
 				case 1:
 					ConfigLoader.setDefaultConfig(null);
