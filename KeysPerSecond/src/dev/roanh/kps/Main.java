@@ -28,11 +28,7 @@ import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -62,6 +58,7 @@ import dev.roanh.kps.layout.GridPanel;
 import dev.roanh.kps.layout.Layout;
 import dev.roanh.kps.panels.DataPanel;
 import dev.roanh.kps.panels.GraphPanel;
+import dev.roanh.kps.translation.Translator;
 import dev.roanh.kps.ui.dialog.MainDialog;
 import dev.roanh.kps.ui.listener.MainWindowListener;
 import dev.roanh.util.Dialog;
@@ -190,7 +187,12 @@ public class Main{
 
 		//simple hello print
 		System.out.println("KeysPerSecond " + VERSION);
-		
+
+		Locale defaultLanguage = ConfigLoader.getDefaultLanguage();
+		Translator.loadTranslation(defaultLanguage);
+
+		System.out.println(Translator.translate("test"));
+
 		//check for a passed config
 		String configPath = null;
 		if(args.length >= 1 && !args[0].equalsIgnoreCase("-relaunch")){

@@ -27,6 +27,7 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
@@ -53,6 +54,21 @@ public class ConfigLoader{
 	 * Preferences store for persistent settings.
 	 */
 	private static final Preferences prefs = Preferences.userRoot().node("dev.roanh.kps");
+
+	public static final void setDefaultLanguage(Locale language) throws BackingStoreException {
+		prefs.put("defaultLanguage", language.toLanguageTag());
+		prefs.flush();
+	}
+
+	public static final Locale getDefaultLanguage() {
+		String defaultLanguage = prefs.get("defaultLanguage", null);
+
+		if (defaultLanguage != null) {
+			return Locale.forLanguageTag(defaultLanguage);
+		} else {
+			return Locale.ENGLISH;
+		}
+	}
 	
 	/**
 	 * Loads a configuration file (with GUI).
