@@ -186,7 +186,7 @@ public class Main{
 		ExclamationMarkPath.check(args);
 
 		//simple hello print
-		System.out.println("KeysPerSecond " + VERSION);
+		System.out.println(Translator.translate("name") + " " + VERSION);
 
 		Locale defaultLanguage = ConfigLoader.getDefaultLanguage();
 		Translator.loadTranslation(defaultLanguage);
@@ -203,14 +203,14 @@ public class Main{
 		//set UI components
 		Util.installUI();
 		content = new GridPanel();
-		frame = new JFrame("KeysPerSecond");
+		frame = new JFrame(Translator.translate("app_name"));
 		layout = new Layout(content);
 		content.setLayout(layout);
 		
 		//set dialog defaults
 		Dialog.setDialogIcon(iconSmall);
 		Dialog.setParentFrame(frame);
-		Dialog.setDialogTitle("KeysPerSecond");
+		Dialog.setDialogTitle(Translator.translate("app_name"));
 		
 		//register input sources
 		try{
