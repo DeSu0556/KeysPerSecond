@@ -185,12 +185,14 @@ public class Main{
 		//work around for a JDK bug
 		ExclamationMarkPath.check(args);
 
-		//simple hello print
-		System.out.println(Translator.translate("name") + " " + VERSION);
+		//load default translation properties
+		Translator.loadDefaultTranslation();
 
 		Locale defaultLanguage = ConfigLoader.getDefaultLanguage();
 		Translator.loadTranslation(defaultLanguage);
 
+		//simple hello print
+		System.out.println(Translator.translate("name") + " " + VERSION);
 		System.out.println(Translator.translate("test"));
 
 		//check for a passed config
@@ -203,22 +205,22 @@ public class Main{
 		//set UI components
 		Util.installUI();
 		content = new GridPanel();
-		frame = new JFrame(Translator.translate("app_name"));
+		frame = new JFrame(Translator.translate("name"));
 		layout = new Layout(content);
 		content.setLayout(layout);
 		
 		//set dialog defaults
 		Dialog.setDialogIcon(iconSmall);
 		Dialog.setParentFrame(frame);
-		Dialog.setDialogTitle(Translator.translate("app_name"));
-		
+		Dialog.setDialogTitle(Translator.translate("name"));
+
 		//register input sources
 		try{
 			eventManager.registerInputSource(new NativeHookInputSource(eventManager));
 		}catch(NativeHookException ex){
-			System.err.println("There was a problem registering the native hook.");
+			System.err.println(Translator.translate("error_while_registering_hook") + ".");
 			ex.printStackTrace();
-			Dialog.showErrorDialog("There was a problem registering the native hook: " + ex.getMessage());
+			Dialog.showErrorDialog(Translator.translate("error_while_registering_hook") + ": " + ex.getMessage());
 			System.exit(1);
 		}
 		
@@ -276,13 +278,13 @@ public class Main{
 				Statistics.loadStats(Paths.get(config.getStatsSavingSettings().getSaveFile()));
 			}catch(IOException | UnsupportedOperationException | IllegalArgumentException e){
 				e.printStackTrace();
-				Dialog.showMessageDialog("Failed to load statistics on launch.\nCause: " + e.getMessage());
+				Dialog.showMessageDialog(Translator.translate("failed_to_load_statistics_on_launch") + "\nCause: " + e.getMessage());
 			}
 		}
 		
 		//print loaded config
 		if(config.getPath() != null){
-			System.out.println("Loaded config file: " + config.getPath().toString());
+			System.out.println(Translator.translate("loaded_config_file") + config.getPath().toString());
 		}
 		
 		//update the running state
@@ -630,7 +632,7 @@ public class Main{
 	 * Resets all derived statistics.
 	 */
 	protected static final void resetStats(){
-		System.out.println("Reset stats | max: " + max + " avg: " + avg + " tot: " + hits);
+		System.out.println(Translator.translate("on_reset_statistics", max, avg, hits));
 		n = 0;
 		avg = 0;
 		max = 0;
@@ -645,7 +647,7 @@ public class Main{
 	 * Resets key count totals.
 	 */
 	protected static final void resetTotals(){
-		System.out.print("Reset key counts |");
+		System.out.print(Translator.translate("on_reset_counters"));
 		for(Entry<Integer, Key> key : keys.entrySet()){
 			System.out.print(" " + CommandKeys.formatExtendedCode(key.getKey()) + ":" + key.getValue().getCount());
 			key.getValue().setCount(0);
