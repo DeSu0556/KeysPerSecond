@@ -19,9 +19,11 @@
 package dev.roanh.kps.ui.dialog;
 
 import java.awt.*;
+import java.awt.event.ItemEvent;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -50,12 +52,20 @@ public class DefaultConfigDialog extends JPanel {
 	 */
 	private JTextField selectedFile = new JFormattedTextField(new FilePathFormatterFactory(), Objects.toString(ConfigLoader.getDefaultConfig(), ""));
 
+    /*
+    * Currently available languages
+    * */
 	private static Map<String, String> availableLanguageMaps = Translator.getAvailableLanguageMaps();
 
     /*
     * The dropdown list of default language.
     * */
-	private JComboBox<String> selectedLanguage = new JComboBox<>();
+	private JComboBox<String> languageSelections = new JComboBox<>();
+
+	/*
+	* Whether to refresh the interface when exiting
+	* */
+	private boolean reloadWindowOnClose = false;
 
 	/**
 	 * Constructs a new default config dialog.
@@ -79,13 +89,27 @@ public class DefaultConfigDialog extends JPanel {
 		JPanel languagePanel = new JPanel();
 		languagePanel.setLayout(new BoxLayout(languagePanel, BoxLayout.X_AXIS));
 
-		for (String language : availableLanguageMaps.keySet()) {
-			selectedLanguage.addItem(language);
+		String currentLanguageTag = Translator.getCurrentUsingLocale().toString();
+		languageSelections.addItem(availableLanguageMaps.get(currentLanguageTag));
+
+		for (Map.Entry<String, String> entry : availableLanguageMaps.entrySet()) {
+			if (entry.getKey().equals(currentLanguageTag)) {
+				continue;
+			}
+			languageSelections.addItem(entry.getValue());
 		}
+
 		languagePanel.add(new Label("Default Language: "));
-		languagePanel.add(selectedLanguage);
+		languagePanel.add(languageSelections);
+
+        languageSelections.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                reloadWindowOnClose = true;
+			}
+        });
 
 		vecPanel.add(configLayout);
+		vecPanel.add(Box.createVerticalStrut(8));
 		vecPanel.add(languagePanel);
 		add(vecPanel, BorderLayout.CENTER);
 
@@ -97,6 +121,11 @@ public class DefaultConfigDialog extends JPanel {
 		});
 	}
 
+    public Locale getSelectedLocale() {
+        Object selectedItem = languageSelections.getSelectedItem();
+        return Locale.forLanguageTag(availableLanguageMaps.get(selectedItem));
+    }
+
 	/**
 	 * Shows a dialog to configure the default configuration file to use.
 	 */
@@ -106,7 +135,12 @@ public class DefaultConfigDialog extends JPanel {
 			switch (Dialog.showDialog(dialog, new String[]{"Save", "Remove Default Config", "Cancel"})) {
 				case 0:
 					ConfigLoader.setDefaultConfig(Paths.get(dialog.selectedFile.getText()));
-                    ConfigLoader.setDefaultLanguage(Locale.forLanguageTag(availableLanguageMaps.get((String) dialog.selectedLanguage.getSelectedItem())));
+                    ConfigLoader.setDefaultLanguage(Locale.forLanguageTag(availableLanguageMaps.get((String) dialog.languageSelections.getSelectedItem())));
+
+                    if (dialog.reloadWindowOnClose) {
+                        Translator.loadTranslation(dialog.getSelectedLocale());
+                    }
+
 					break;
 				case 1:
 					ConfigLoader.setDefaultConfig(null);

@@ -56,6 +56,7 @@ import dev.roanh.kps.config.ConfigLoader;
 import dev.roanh.kps.config.Configuration;
 import dev.roanh.kps.config.UpdateRate;
 import dev.roanh.kps.config.group.KeyPanelSettings;
+import dev.roanh.kps.translation.Translator;
 import dev.roanh.kps.ui.dialog.AboutDialog;
 import dev.roanh.kps.ui.dialog.ColorDialog;
 import dev.roanh.kps.ui.dialog.CommandKeysDialog;
@@ -72,31 +73,31 @@ public class Menu{
 	/**
 	 * The right click menu.
 	 */
-	protected static final JPopupMenu menu = new JPopupMenu();
+	protected static  JPopupMenu menu = new JPopupMenu();
 	/**
 	 * The configuration menu.
 	 */
-	private static final JMenu configure = new JMenu("Configure");
+	private static JMenu configure;
 	/**
 	 * The general menu.
 	 */
-	private static final JMenu general = new JMenu("General");
+	private static JMenu general ;
 	/**
 	 * Update rate menu.
 	 */
-	private static final JMenu rate = new JMenu("Update rate");
+	private static JMenu rate;
 	/**
 	 * Reset menu.
 	 */
-	private static final JMenu reset = new JMenu("Reset");
+	private static JMenu reset;
 	/**
 	 * Load/Save menu.
 	 */
-	private static final JMenu saveLoad = new JMenu("Save / Load");
+	private static JMenu saveLoad;
 	/**
 	 * The pause menu item.
 	 */
-	protected static final JCheckBoxMenuItem pause = new JCheckBoxMenuItem("Pause");
+	protected static JCheckBoxMenuItem pause;
 	/**
 	 * The icon for the system tray.
 	 */
@@ -105,7 +106,7 @@ public class Menu{
 	/**
 	 * Repaints the component border
 	 */
-	protected static final void repaint(){
+	protected static  void repaint(){
 		Border border = BorderFactory.createLineBorder(Main.config.getTheme().getForeground().getColor());
 		menu.setBorder(border);
 		configure.getPopupMenu().setBorder(border);
@@ -118,7 +119,14 @@ public class Menu{
 	/**
 	 * Creates the popup menu
 	 */
-	protected static final void createMenu(){
+	protected static  void createMenu(){
+		configure = new JMenu("Configure");
+		general = new JMenu("General");
+		rate = new JMenu("Update rate");
+		reset = new JMenu("Reset");
+		saveLoad = new JMenu("Save / Load");
+		pause = new JCheckBoxMenuItem("Pause");
+
 		menu.removeAll();
 		configure.removeAll();
 		general.removeAll();
@@ -148,7 +156,7 @@ public class Menu{
 		JCheckBoxMenuItem modifiers = new JCheckBoxMenuItem("Key-modifier tracking");
 		JCheckBoxMenuItem windowed = new JCheckBoxMenuItem("Windowed mode");
 		JMenuItem save = new JMenuItem("Save config");
-		JMenuItem load = new JMenuItem("Load config");
+		JMenuItem load = new JMenuItem(Translator.translate("menu.load_config"));
 		JMenuItem defConf = new JMenuItem("Default config");
 		JMenuItem saveStats = new JMenuItem("Save stats");
 		JMenuItem loadStats = new JMenuItem("Load stats");
@@ -405,7 +413,7 @@ public class Menu{
 	 * UI for JMenus
 	 * @author Roan
 	 */
-	private static final class MenuUI extends BasicMenuUI implements MouseListener, PopupMenuListener{
+	private static  class MenuUI extends BasicMenuUI implements MouseListener, PopupMenuListener{
 		/**
 		 * Whether or not the component currently has focus
 		 */
@@ -436,7 +444,7 @@ public class Menu{
 		 * @param hasCursor Whether or not the cursor is over the component
 		 * @param defaultTextIconGap The gap between the text and the icon
 		 */
-		private static final void paintMenuItem(Graphics2D g, JMenuItem menuItem, boolean hasCursor, int defaultTextIconGap){
+		private static  void paintMenuItem(Graphics2D g, JMenuItem menuItem, boolean hasCursor, int defaultTextIconGap){
 			g.setColor(Main.config.getTheme().getBackground().getColor());
 			g.fillRect(0, 0, menuItem.getWidth(), menuItem.getHeight());
 			if(menuItem instanceof JCheckBoxMenuItem && menuItem.isSelected()){
@@ -501,7 +509,7 @@ public class Menu{
 	 * UI for JMenuItems
 	 * @author Roan
 	 */
-	public static final class MenuItemUI extends BasicMenuItemUI implements MouseListener, PopupMenuListener{
+	public static  class MenuItemUI extends BasicMenuItemUI implements MouseListener, PopupMenuListener{
 		/**
 		 * Whether or not the component currently has a mouse over it
 		 */
@@ -509,7 +517,7 @@ public class Menu{
 		/**
 		 * Opaque selection painting color1
 		 */
-		private static final AlphaComposite mode = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1F);
+		private static  AlphaComposite mode = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1F);
 
 		@Override
 		public void installUI(JComponent c){

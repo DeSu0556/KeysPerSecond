@@ -34,6 +34,7 @@ import javax.swing.SwingConstants;
 import dev.roanh.kps.Main;
 import dev.roanh.kps.config.ConfigLoader;
 import dev.roanh.kps.config.Configuration;
+import dev.roanh.kps.translation.Translator;
 import dev.roanh.util.ClickableLink;
 import dev.roanh.util.Dialog;
 import dev.roanh.util.Util;
@@ -128,7 +129,7 @@ public class MainDialog extends JPanel{
 		JPanel configuration = new JPanel(new GridLayout(3, 1));
 		configuration.setBorder(BorderFactory.createTitledBorder("Configuration"));
 		
-		JButton load = new JButton("Load config");
+		JButton load = new JButton(Translator.translate("menu.load_config"));
 		configuration.add(load);
 		load.addActionListener(e->{
 			Configuration toLoad = ConfigLoader.loadConfiguration();
