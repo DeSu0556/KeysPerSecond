@@ -164,12 +164,12 @@ public class DefaultConfigDialog extends JPanel {
 	static class CustomCellRenderer extends DefaultListCellRenderer {
 		@Override
 		public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+			Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 			if (value instanceof Map.Entry) {
 				String label = ((Map.Entry<String, String>) value).getValue();
 				setText(label);
 			}
-
-			return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+			return component;
 		}
 	}
 }
