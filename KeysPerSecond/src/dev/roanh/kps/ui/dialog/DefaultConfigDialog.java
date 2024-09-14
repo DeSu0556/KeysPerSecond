@@ -23,7 +23,6 @@ import java.awt.event.ItemEvent;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -34,7 +33,9 @@ import javax.swing.*;
 import dev.roanh.kps.config.ConfigLoader;
 import dev.roanh.kps.config.Configuration;
 import dev.roanh.kps.translation.Translator;
+import dev.roanh.kps.ui.Rebuildable;
 import dev.roanh.kps.ui.model.FilePathFormatterFactory;
+import dev.roanh.kps.utils.MapUtils;
 import dev.roanh.util.Dialog;
 
 /**
@@ -60,7 +61,7 @@ public class DefaultConfigDialog extends JPanel {
     /*
     * The dropdown list of default language.
     * */
-	private JComboBox<String> languageSelections = new JComboBox<>();
+	private JComboBox<Map.Entry<String, String>> languageSelections = new JComboBox<>();
 
 	/*
 	* Whether to refresh the interface when exiting
@@ -89,24 +90,27 @@ public class DefaultConfigDialog extends JPanel {
 		JPanel languagePanel = new JPanel();
 		languagePanel.setLayout(new BoxLayout(languagePanel, BoxLayout.X_AXIS));
 
-		String currentLanguageTag = Translator.getCurrentUsingLocale().toString();
-		languageSelections.addItem(availableLanguageMaps.get(currentLanguageTag));
+		languageSelections.setRenderer(new CustomCellRenderer());
+		languageSelections.addItemListener(e -> {
+			if (e.getStateChange() == ItemEvent.SELECTED) {
+				reloadWindowOnClose = true;
+			}
+		});
 
+		// add the current language to make it the first
+		String currentLanguageTag = Translator.getCurrentUsingLocale().toString();
+		languageSelections.addItem(MapUtils.getEntryByKey(availableLanguageMaps, currentLanguageTag));
+
+		// add other language
 		for (Map.Entry<String, String> entry : availableLanguageMaps.entrySet()) {
 			if (entry.getKey().equals(currentLanguageTag)) {
 				continue;
 			}
-			languageSelections.addItem(entry.getValue());
+			languageSelections.addItem(entry);
 		}
 
 		languagePanel.add(new Label("Default Language: "));
 		languagePanel.add(languageSelections);
-
-        languageSelections.addItemListener(e -> {
-            if (e.getStateChange() == ItemEvent.SELECTED) {
-                reloadWindowOnClose = true;
-			}
-        });
 
 		vecPanel.add(configLayout);
 		vecPanel.add(Box.createVerticalStrut(8));
@@ -121,24 +125,26 @@ public class DefaultConfigDialog extends JPanel {
 		});
 	}
 
-    public Locale getSelectedLocale() {
-        Object selectedItem = languageSelections.getSelectedItem();
-        return Locale.forLanguageTag(availableLanguageMaps.get(selectedItem));
+	public Locale getSelectedLocale() {
+        Map.Entry<String, String> languageEntry = ((Map.Entry<String, String>) languageSelections.getSelectedItem());
+        return Locale.forLanguageTag(languageEntry.getKey());
     }
 
 	/**
 	 * Shows a dialog to configure the default configuration file to use.
 	 */
-	public static final void showDefaultConfigDialog() {
+	public static final void showDefaultConfigDialog(Rebuildable current) {
 		DefaultConfigDialog dialog = new DefaultConfigDialog();
 		try {
 			switch (Dialog.showDialog(dialog, new String[]{"Save", "Remove Default Config", "Cancel"})) {
 				case 0:
 					ConfigLoader.setDefaultConfig(Paths.get(dialog.selectedFile.getText()));
-                    ConfigLoader.setDefaultLanguage(Locale.forLanguageTag(availableLanguageMaps.get((String) dialog.languageSelections.getSelectedItem())));
 
-                    if (dialog.reloadWindowOnClose) {
-                        Translator.loadTranslation(dialog.getSelectedLocale());
+					if (dialog.reloadWindowOnClose) {
+						Locale selectedLocale = dialog.getSelectedLocale();
+						ConfigLoader.setDefaultLanguage(selectedLocale);
+						Translator.loadTranslation(selectedLocale);
+						current.rebuild();
                     }
 
 					break;
@@ -152,6 +158,18 @@ public class DefaultConfigDialog extends JPanel {
 		} catch (BackingStoreException | InvalidPathException e) {
 			e.printStackTrace();
 			Dialog.showErrorDialog("Failed to save default config, cause: " + e.getMessage());
+		}
+	}
+
+	static class CustomCellRenderer extends DefaultListCellRenderer {
+		@Override
+		public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+			if (value instanceof Map.Entry) {
+				String label = ((Map.Entry<String, String>) value).getValue();
+				setText(label);
+			}
+
+			return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 		}
 	}
 }

@@ -284,7 +284,7 @@ public class Main{
 		
 		//print loaded config
 		if(config.getPath() != null){
-			System.out.println(Translator.translate("loaded_config_file") + config.getPath().toString());
+			System.out.println(Translator.translate("loaded_config_file") + config.getPath());
 		}
 		
 		//update the running state

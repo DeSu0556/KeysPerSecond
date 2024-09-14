@@ -57,10 +57,10 @@ import dev.roanh.kps.config.Configuration;
 import dev.roanh.kps.config.UpdateRate;
 import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.translation.Translator;
+import dev.roanh.kps.ui.Rebuildable;
 import dev.roanh.kps.ui.dialog.AboutDialog;
 import dev.roanh.kps.ui.dialog.ColorDialog;
 import dev.roanh.kps.ui.dialog.CommandKeysDialog;
-import dev.roanh.kps.ui.dialog.DefaultConfigDialog;
 import dev.roanh.kps.ui.dialog.KeysDialog;
 import dev.roanh.kps.ui.dialog.LayoutDialog;
 import dev.roanh.kps.ui.dialog.StatsSavingDialog;
@@ -69,7 +69,7 @@ import dev.roanh.kps.ui.dialog.StatsSavingDialog;
  * This class handles everything related to the popup menus.
  * @author Roan
  */
-public class Menu{
+public class Menu implements Rebuildable {
 	/**
 	 * The right click menu.
 	 */
@@ -291,7 +291,7 @@ public class Menu{
 			Main.config.saveConfig(true);
 		});
 		defConf.addActionListener(e->{
-			DefaultConfigDialog.showDefaultConfigDialog();
+//			DefaultConfigDialog.showDefaultConfigDialog(Menu.this);
 		});
 		load.addActionListener((e)->{
 			Configuration toLoad = ConfigLoader.loadConfiguration();
@@ -407,6 +407,11 @@ public class Menu{
 		if(SystemTray.isSupported()){
 			SystemTray.getSystemTray().remove(trayIcon);
 		}
+	}
+
+	@Override
+	public void rebuild() {
+
 	}
 
 	/**
