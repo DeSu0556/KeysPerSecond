@@ -58,18 +58,13 @@ import dev.roanh.kps.config.UpdateRate;
 import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.translation.Translator;
 import dev.roanh.kps.ui.Rebuildable;
-import dev.roanh.kps.ui.dialog.AboutDialog;
-import dev.roanh.kps.ui.dialog.ColorDialog;
-import dev.roanh.kps.ui.dialog.CommandKeysDialog;
-import dev.roanh.kps.ui.dialog.KeysDialog;
-import dev.roanh.kps.ui.dialog.LayoutDialog;
-import dev.roanh.kps.ui.dialog.StatsSavingDialog;
+import dev.roanh.kps.ui.dialog.*;
 
 /**
  * This class handles everything related to the popup menus.
  * @author Roan
  */
-public class Menu implements Rebuildable {
+public class Menu {
 	/**
 	 * The right click menu.
 	 */
@@ -156,7 +151,7 @@ public class Menu implements Rebuildable {
 		JCheckBoxMenuItem modifiers = new JCheckBoxMenuItem("Key-modifier tracking");
 		JCheckBoxMenuItem windowed = new JCheckBoxMenuItem("Windowed mode");
 		JMenuItem save = new JMenuItem("Save config");
-		JMenuItem load = new JMenuItem(Translator.translate("menu.load_config"));
+		JMenuItem load = new JMenuItem(Translator.translate("load_config"));
 		JMenuItem defConf = new JMenuItem("Default config");
 		JMenuItem saveStats = new JMenuItem("Save stats");
 		JMenuItem loadStats = new JMenuItem("Load stats");
@@ -291,7 +286,7 @@ public class Menu implements Rebuildable {
 			Main.config.saveConfig(true);
 		});
 		defConf.addActionListener(e->{
-//			DefaultConfigDialog.showDefaultConfigDialog(Menu.this);
+			DefaultConfigDialog.showDefaultConfigDialog(new RebuildInvoker());
 		});
 		load.addActionListener((e)->{
 			Configuration toLoad = ConfigLoader.loadConfiguration();
@@ -407,11 +402,6 @@ public class Menu implements Rebuildable {
 		if(SystemTray.isSupported()){
 			SystemTray.getSystemTray().remove(trayIcon);
 		}
-	}
-
-	@Override
-	public void rebuild() {
-
 	}
 
 	/**
@@ -576,6 +566,14 @@ public class Menu implements Rebuildable {
 		@Override
 		public void popupMenuCanceled(PopupMenuEvent e){
 			hasCursor = false;
+		}
+	}
+
+	static class RebuildInvoker implements Rebuildable {
+		@Override
+		public void rebuild() {
+			Menu.createMenu();
+			Menu.repaint();
 		}
 	}
 }

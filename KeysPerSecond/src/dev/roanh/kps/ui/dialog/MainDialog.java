@@ -126,7 +126,7 @@ public class MainDialog extends JPanel implements Rebuildable {
 		JPanel configuration = new JPanel(new GridLayout(3, 1));
 		configuration.setBorder(BorderFactory.createTitledBorder("Configuration"));
 		
-		JButton load = new JButton(Translator.translate("menu.load_config"));
+		JButton load = new JButton(Translator.translate("load_config"));
 		configuration.add(load);
 		load.addActionListener(e->{
 			Configuration toLoad = ConfigLoader.loadConfiguration();
