@@ -35,6 +35,7 @@ import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.config.group.LocationSettings;
 import dev.roanh.kps.config.group.PanelSettings;
 import dev.roanh.kps.layout.LayoutValidator;
+import dev.roanh.kps.translation.Translator;
 import dev.roanh.kps.ui.model.EndNumberModel;
 import dev.roanh.kps.ui.model.MaxNumberModel;
 import dev.roanh.kps.ui.model.SpecialNumberModel.ValueChangeListener;
@@ -91,14 +92,14 @@ public class TablePanel extends JPanel{
 		row.add(new JLabel(name, SwingConstants.CENTER));
 		
 		if(location){
-			row.add(new JLabel("X", SwingConstants.CENTER));
-			row.add(new JLabel("Y", SwingConstants.CENTER));
-			row.add(new JLabel("Width", SwingConstants.CENTER));
-			row.add(new JLabel("Height", SwingConstants.CENTER));
+			row.add(new JLabel(Translator.translate("x"), SwingConstants.CENTER));
+			row.add(new JLabel(Translator.translate("y"), SwingConstants.CENTER));
+			row.add(new JLabel(Translator.translate("width"), SwingConstants.CENTER));
+			row.add(new JLabel(Translator.translate("height"), SwingConstants.CENTER));
 		}
 		
-		row.add(new JLabel("Settings", SwingConstants.CENTER));
-		row.add(new JLabel("Delete", SwingConstants.CENTER));
+		row.add(new JLabel(Translator.translate("settings"), SwingConstants.CENTER));
+		row.add(new JLabel(Translator.translate("delete"), SwingConstants.CENTER));
 		rows.add(row);
 	}
 	
@@ -158,7 +159,7 @@ public class TablePanel extends JPanel{
 		}
 
 		//edit
-		JButton edit = new JButton("Edit");
+		JButton edit = new JButton(Translator.translate("edit"));
 		row.add(edit);
 		edit.addActionListener(e->{
 			info.showEditor(live);
@@ -166,7 +167,7 @@ public class TablePanel extends JPanel{
 		});
 		
 		//delete
-		JButton delete = new JButton("Remove");
+		JButton delete = new JButton(Translator.translate("remove"));
 		row.add(delete);
 		delete.addActionListener(e->{
 			panels.remove(info);
