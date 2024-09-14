@@ -34,6 +34,8 @@ import javax.swing.SwingConstants;
 import dev.roanh.kps.Main;
 import dev.roanh.kps.config.ConfigLoader;
 import dev.roanh.kps.config.Configuration;
+import dev.roanh.kps.translation.Translator;
+import dev.roanh.kps.ui.Rebuildable;
 import dev.roanh.util.ClickableLink;
 import dev.roanh.util.Dialog;
 import dev.roanh.util.Util;
@@ -42,7 +44,7 @@ import dev.roanh.util.Util;
  * Main configuration dialog shown on first launch.
  * @author Roan
  */
-public class MainDialog extends JPanel{
+public class MainDialog extends JPanel implements Rebuildable {
 	/**
 	 * Serial ID.
 	 */
@@ -61,11 +63,7 @@ public class MainDialog extends JPanel{
 	 */
 	public MainDialog(){
 		super(new BorderLayout());
-		options.syncBoxes();
-		
-		add(buildLeftPanel(), BorderLayout.CENTER);
-		add(buildRightPanel(), BorderLayout.LINE_END);
-		add(buildBottomPanel(), BorderLayout.PAGE_END);
+        build();
 	}
 	
 	/**
@@ -128,7 +126,7 @@ public class MainDialog extends JPanel{
 		JPanel configuration = new JPanel(new GridLayout(3, 1));
 		configuration.setBorder(BorderFactory.createTitledBorder("Configuration"));
 		
-		JButton load = new JButton("Load config");
+		JButton load = new JButton(Translator.translate("load_config"));
 		configuration.add(load);
 		load.addActionListener(e->{
 			Configuration toLoad = ConfigLoader.loadConfiguration();
@@ -144,7 +142,7 @@ public class MainDialog extends JPanel{
 		
 		JButton defConf = new JButton("Default config");
 		configuration.add(defConf);
-		defConf.addActionListener(e->DefaultConfigDialog.showDefaultConfigDialog());
+		defConf.addActionListener(e->DefaultConfigDialog.showDefaultConfigDialog(this));
 		
 		//settings
 		JPanel settings = new JPanel(new GridLayout(4, 1));
@@ -180,12 +178,26 @@ public class MainDialog extends JPanel{
 		right.add(aboutPanel, BorderLayout.PAGE_END);
 		return right;
 	}
-	
-	/**
+
+    private void build() {
+        options.syncBoxes();
+        add(buildLeftPanel(), BorderLayout.CENTER);
+        add(buildRightPanel(), BorderLayout.LINE_END);
+        add(buildBottomPanel(), BorderLayout.PAGE_END);
+    }
+
+    @Override
+    public void rebuild() {
+		options = new CheckBoxPanel();
+		removeAll();
+        build();
+    }
+
+    /**
 	 * Panel with check box style options.
 	 * @author Roan
 	 */
-	private class CheckBoxPanel extends JPanel{
+	private class CheckBoxPanel extends JPanel {
 		/**
 		 * Serial ID.
 		 */

@@ -35,10 +35,15 @@ public class Translator {
         return String.format(resultWithoutFormat, values);
     }
 
+    public static Locale getCurrentUsingLocale() {
+        return resourceBundle.getLocale();
+    }
+
     public static final Map<String, String> getAvailableLanguageMaps() {
         HashMap<String, String> map = new HashMap<>();
-        map.put("English", "en");
-        map.put("中文", "zh-CN");
+        map.put("en", "English");
+        map.put("zh_CN", "简体中文");
+        map.put("ar_SA", "عربي");
         return map;
     }
 }
