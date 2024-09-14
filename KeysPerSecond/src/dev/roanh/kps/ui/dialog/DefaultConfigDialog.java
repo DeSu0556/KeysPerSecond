@@ -127,7 +127,7 @@ public class DefaultConfigDialog extends JPanel {
 
 	public Locale getSelectedLocale() {
         Map.Entry<String, String> languageEntry = ((Map.Entry<String, String>) languageSelections.getSelectedItem());
-        return Locale.forLanguageTag(languageEntry.getKey());
+        return Locale.forLanguageTag(languageEntry.getKey().replace("_", "-"));
     }
 
 	/**

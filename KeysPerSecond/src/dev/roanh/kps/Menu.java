@@ -573,7 +573,7 @@ public class Menu {
 		@Override
 		public void rebuild() {
 			Menu.createMenu();
-			Menu.repaint();
+				Menu.repaint();
 		}
 	}
 }

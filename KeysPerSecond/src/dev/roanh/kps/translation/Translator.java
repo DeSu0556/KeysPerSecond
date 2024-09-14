@@ -43,6 +43,7 @@ public class Translator {
         HashMap<String, String> map = new HashMap<>();
         map.put("en", "English");
         map.put("zh_CN", "简体中文");
+        map.put("ar_SA", "عربي");
         return map;
     }
 }
