@@ -18,34 +18,14 @@
  */
 package dev.roanh.kps;
 
-import java.awt.AWTException;
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Composite;
-import java.awt.Dimension;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.KeyboardFocusManager;
-import java.awt.MenuItem;
-import java.awt.Point;
-import java.awt.PopupMenu;
-import java.awt.Rectangle;
-import java.awt.SystemTray;
-import java.awt.TrayIcon;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
-import javax.swing.BorderFactory;
-import javax.swing.Icon;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
@@ -57,8 +37,9 @@ import dev.roanh.kps.config.Configuration;
 import dev.roanh.kps.config.UpdateRate;
 import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.translation.Translator;
-import dev.roanh.kps.ui.Rebuildable;
+import dev.roanh.kps.ui.dialog.OnChangeLocale;
 import dev.roanh.kps.ui.dialog.*;
+import dev.roanh.kps.utils.ComponentOrientationUtils;
 
 /**
  * This class handles everything related to the popup menus.
@@ -128,7 +109,7 @@ public class Menu {
 		rate.removeAll();
 		reset.removeAll();
 		saveLoad.removeAll();
-		
+
 		List<JMenuItem> components = new ArrayList<JMenuItem>();
 		JMenuItem snap = new JMenuItem("Snap to edges");
 		JMenuItem exit = new JMenuItem("Exit");
@@ -151,7 +132,7 @@ public class Menu {
 		JCheckBoxMenuItem modifiers = new JCheckBoxMenuItem("Key-modifier tracking");
 		JCheckBoxMenuItem windowed = new JCheckBoxMenuItem("Windowed mode");
 		JMenuItem save = new JMenuItem("Save config");
-		JMenuItem load = new JMenuItem(Translator.translate("load_config"));
+		JMenuItem load = new JMenuItem(Translator.translate("action.config.load"));
 		JMenuItem defConf = new JMenuItem("Default config");
 		JMenuItem saveStats = new JMenuItem("Save stats");
 		JMenuItem loadStats = new JMenuItem("Load stats");
@@ -265,7 +246,7 @@ public class Menu {
 		layout.addActionListener((e)->{
 			LayoutDialog.configureLayout(Main.config, true);
 		});
-		
+
 		List<JCheckBoxMenuItem> rates = new ArrayList<JCheckBoxMenuItem>();
 		for(UpdateRate val : UpdateRate.values()){
 			JCheckBoxMenuItem item = new JCheckBoxMenuItem(val.toString(), Main.config.getUpdateRate() == val);
@@ -360,7 +341,7 @@ public class Menu {
 
 				trayIcon = new TrayIcon(Main.iconSmall, "KeysPerSecond", popupMenu);
 				trayIcon.addMouseListener(new MouseListener(){
-					
+
 					@Override
 					public void mouseClicked(MouseEvent e){
 						if(e.getButton() == MouseEvent.BUTTON1){
@@ -393,7 +374,7 @@ public class Menu {
 			}
 		}
 	}
-	
+
 	/**
 	 * Removes the system tray icon if present and makes the main frame visible again.
 	 */
@@ -413,6 +394,29 @@ public class Menu {
 		 * Whether or not the component currently has focus
 		 */
 		private boolean hasCursor = false;
+
+        public MenuUI() {
+            for (Component component : menu.getComponents()) {
+                if (component instanceof JPopupMenu) {
+                    JPopupMenu submenu = (JPopupMenu) component;
+                    submenu.addPopupMenuListener(new PopupMenuListener() {
+                        @Override
+                        public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                            Point location = submenu.getLocation();
+                            submenu.setLocation(location.x - submenu.getPreferredSize().width, location.y);
+                        }
+
+                        @Override
+                        public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                        }
+
+                        @Override
+                        public void popupMenuCanceled(PopupMenuEvent e) {
+                        }
+                    });
+                }
+            }
+        }
 
 		@Override
 		public void installUI(JComponent c){
@@ -440,6 +444,14 @@ public class Menu {
 		 * @param defaultTextIconGap The gap between the text and the icon
 		 */
 		private static  void paintMenuItem(Graphics2D g, JMenuItem menuItem, boolean hasCursor, int defaultTextIconGap){
+			if (Translator.getCurrentTextOrientation() == ComponentOrientation.RIGHT_TO_LEFT) {
+				paintMenuItemRTL(g, menuItem, hasCursor, defaultTextIconGap);
+			} else {
+				paintMenuItemLTL(g, menuItem, hasCursor, defaultTextIconGap);
+			}
+		}
+
+		private static void paintMenuItemLTL(Graphics2D g, JMenuItem menuItem, boolean hasCursor, int defaultTextIconGap) {
 			g.setColor(Main.config.getTheme().getBackground().getColor());
 			g.fillRect(0, 0, menuItem.getWidth(), menuItem.getHeight());
 			if(menuItem instanceof JCheckBoxMenuItem && menuItem.isSelected()){
@@ -447,7 +459,7 @@ public class Menu {
 			}else if(menuItem instanceof JMenu){
 				g.drawImage(ColorManager.arrow, menuItem.getWidth() - 12, 5, menuItem.getWidth(), 17, 0, 0, 128, 128, menuItem);
 			}
-			
+
 			g.setColor(Main.config.getTheme().getForeground().getColor());
 			if(hasCursor){
 				g.drawLine(0, 0, menuItem.getWidth(), 0);
@@ -457,10 +469,38 @@ public class Menu {
 				g.fillRect(0, 0, menuItem.getWidth(), menuItem.getHeight());
 				g.setComposite(prev);
 			}
-			
+
 			FontMetrics fm = menuItem.getFontMetrics(g.getFont());
 			g.addRenderingHints(Main.desktopHints);
 			g.drawString(menuItem.getText(), 22 + defaultTextIconGap, ((22 - fm.getHeight()) / 2) + fm.getAscent());
+		}
+
+		private static void paintMenuItemRTL(Graphics2D g, JMenuItem menuItem, boolean hasCursor, int defaultTextIconGap) {
+			g.setColor(Main.config.getTheme().getBackground().getColor());
+			g.fillRect(0, 0, menuItem.getWidth(), menuItem.getHeight());
+
+			if (menuItem instanceof JCheckBoxMenuItem && menuItem.isSelected()) {
+				g.drawImage(ColorManager.checkmark, menuItem.getWidth() - 22, 0, menuItem.getWidth(), 22, 0, 0, 100, 100, menuItem);
+			} else if (menuItem instanceof JMenu) {
+				g.drawImage(ColorManager.arrow, 12, 5, 0, 17, 0, 0, 128, 128, menuItem);
+			}
+
+			g.setColor(Main.config.getTheme().getForeground().getColor());
+			if (hasCursor) {
+				g.drawLine(0, 0, menuItem.getWidth(), 0);
+				g.drawLine(0, menuItem.getHeight() - 1, menuItem.getWidth(), menuItem.getHeight() - 1);
+				Composite prev = g.getComposite();
+				g.setComposite(MenuItemUI.mode);
+				g.fillRect(0, 0, menuItem.getWidth(), menuItem.getHeight());
+				g.setComposite(prev);
+			}
+
+			FontMetrics fm = menuItem.getFontMetrics(g.getFont());
+			g.addRenderingHints(Main.desktopHints);
+
+			int textWidth = fm.stringWidth(menuItem.getText());
+			int textX = menuItem.getWidth() - 22 - defaultTextIconGap - textWidth;
+			g.drawString(menuItem.getText(), textX, ((22 - fm.getHeight()) / 2) + fm.getAscent());
 		}
 
 		@Override
@@ -569,11 +609,20 @@ public class Menu {
 		}
 	}
 
-	static class RebuildInvoker implements Rebuildable {
+	static class RebuildInvoker implements OnChangeLocale {
 		@Override
-		public void rebuild() {
+		public void onChangeLocale(Locale locale) {
 			Menu.createMenu();
-				Menu.repaint();
+			Menu.repaint();
+
+			ComponentOrientation currentTextOrientation = ComponentOrientation.getOrientation(locale);
+			ComponentOrientationUtils.setTextOrientationRecursion(configure, currentTextOrientation);
+			ComponentOrientationUtils.setTextOrientationRecursion(general, currentTextOrientation);
+			ComponentOrientationUtils.setTextOrientationRecursion(rate, currentTextOrientation);
+			ComponentOrientationUtils.setTextOrientationRecursion(reset, currentTextOrientation);
+			ComponentOrientationUtils.setTextOrientationRecursion(saveLoad, currentTextOrientation);
+			ComponentOrientationUtils.setTextOrientationRecursion(pause, currentTextOrientation);
+			ComponentOrientationUtils.setTextOrientationRecursion(menu, currentTextOrientation);
 		}
 	}
 }

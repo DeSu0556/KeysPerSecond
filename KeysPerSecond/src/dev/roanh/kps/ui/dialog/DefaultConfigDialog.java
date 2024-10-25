@@ -33,7 +33,6 @@ import javax.swing.*;
 import dev.roanh.kps.config.ConfigLoader;
 import dev.roanh.kps.config.Configuration;
 import dev.roanh.kps.translation.Translator;
-import dev.roanh.kps.ui.Rebuildable;
 import dev.roanh.kps.ui.model.FilePathFormatterFactory;
 import dev.roanh.kps.utils.MapUtils;
 import dev.roanh.util.Dialog;
@@ -132,8 +131,9 @@ public class DefaultConfigDialog extends JPanel {
 
 	/**
 	 * Shows a dialog to configure the default configuration file to use.
+	 * @param current Provides an interface that can be used to rebuild the original GUI
 	 */
-	public static final void showDefaultConfigDialog(Rebuildable current) {
+	public static final void showDefaultConfigDialog(OnChangeLocale current) {
 		DefaultConfigDialog dialog = new DefaultConfigDialog();
 		try {
 			switch (Dialog.showDialog(dialog, new String[]{"Save", "Remove Default Config", "Cancel"})) {
@@ -144,7 +144,7 @@ public class DefaultConfigDialog extends JPanel {
 						Locale selectedLocale = dialog.getSelectedLocale();
 						ConfigLoader.setDefaultLanguage(selectedLocale);
 						Translator.loadTranslation(selectedLocale);
-						current.rebuild();
+						current.onChangeLocale(selectedLocale);
                     }
 
 					break;

@@ -193,7 +193,7 @@ public class Main{
 
 		//simple hello print
 		System.out.println(Translator.translate("name") + " " + VERSION);
-		System.out.println(Translator.translate("test"));
+		System.out.println(Translator.translate("message.test"));
 
 		//check for a passed config
 		String configPath = null;
@@ -218,9 +218,9 @@ public class Main{
 		try{
 			eventManager.registerInputSource(new NativeHookInputSource(eventManager));
 		}catch(NativeHookException ex){
-			System.err.println(Translator.translate("error_while_registering_hook") + ".");
+			System.err.println(Translator.translate("error.registering.hook") + ".");
 			ex.printStackTrace();
-			Dialog.showErrorDialog(Translator.translate("error_while_registering_hook") + ": " + ex.getMessage());
+			Dialog.showErrorDialog(Translator.translate("error.registering.hook") + ": " + ex.getMessage());
 			System.exit(1);
 		}
 		
@@ -278,13 +278,13 @@ public class Main{
 				Statistics.loadStats(Paths.get(config.getStatsSavingSettings().getSaveFile()));
 			}catch(IOException | UnsupportedOperationException | IllegalArgumentException e){
 				e.printStackTrace();
-				Dialog.showMessageDialog(Translator.translate("failed_to_load_statistics_on_launch") + "\nCause: " + e.getMessage());
+				Dialog.showMessageDialog(Translator.translate("error.load.statistics.file") + "\nCause: " + e.getMessage());
 			}
 		}
 		
 		//print loaded config
 		if(config.getPath() != null){
-			System.out.println(Translator.translate("loaded_config_file") + config.getPath());
+			System.out.println(Translator.translate("label.loaded.config") + config.getPath());
 		}
 		
 		//update the running state
@@ -632,7 +632,7 @@ public class Main{
 	 * Resets all derived statistics.
 	 */
 	protected static final void resetStats(){
-		System.out.println(Translator.translate("on_reset_statistics", max, avg, hits));
+		System.out.println(Translator.translate("label.on.reset.stats", max, avg, hits));
 		n = 0;
 		avg = 0;
 		max = 0;

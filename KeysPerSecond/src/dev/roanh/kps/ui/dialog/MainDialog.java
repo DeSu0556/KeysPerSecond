@@ -18,9 +18,9 @@
  */
 package dev.roanh.kps.ui.dialog;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.concurrent.CountDownLatch;
 
 import javax.swing.BorderFactory;
@@ -35,7 +35,7 @@ import dev.roanh.kps.Main;
 import dev.roanh.kps.config.ConfigLoader;
 import dev.roanh.kps.config.Configuration;
 import dev.roanh.kps.translation.Translator;
-import dev.roanh.kps.ui.Rebuildable;
+import dev.roanh.kps.utils.ComponentOrientationUtils;
 import dev.roanh.util.ClickableLink;
 import dev.roanh.util.Dialog;
 import dev.roanh.util.Util;
@@ -44,7 +44,7 @@ import dev.roanh.util.Util;
  * Main configuration dialog shown on first launch.
  * @author Roan
  */
-public class MainDialog extends JPanel implements Rebuildable {
+public class MainDialog extends JPanel implements OnChangeLocale {
 	/**
 	 * Serial ID.
 	 */
@@ -94,7 +94,7 @@ public class MainDialog extends JPanel implements Rebuildable {
 	 */
 	private JPanel buildLeftPanel(){
 		//info
-		JLabel info = new JLabel("<html><body style='width:210px'>You can either configure the program on this screen or use the right <b>right click</b> menu after the program is already visible to see changes take effect in real time.</body></html>");
+		JLabel info = new JLabel(Translator.translate("label.main.dialog.information"));
 		info.setBorder(BorderFactory.createTitledBorder("Information"));
 		
 		//main configuration
@@ -126,7 +126,7 @@ public class MainDialog extends JPanel implements Rebuildable {
 		JPanel configuration = new JPanel(new GridLayout(3, 1));
 		configuration.setBorder(BorderFactory.createTitledBorder("Configuration"));
 		
-		JButton load = new JButton(Translator.translate("load_config"));
+		JButton load = new JButton(Translator.translate("action.config.load"));
 		configuration.add(load);
 		load.addActionListener(e->{
 			Configuration toLoad = ConfigLoader.loadConfiguration();
@@ -181,13 +181,24 @@ public class MainDialog extends JPanel implements Rebuildable {
 
     private void build() {
         options.syncBoxes();
-        add(buildLeftPanel(), BorderLayout.CENTER);
-        add(buildRightPanel(), BorderLayout.LINE_END);
-        add(buildBottomPanel(), BorderLayout.PAGE_END);
+
+        ComponentOrientation currentTextOrientation = Translator.getCurrentTextOrientation();
+
+        if (currentTextOrientation == ComponentOrientation.LEFT_TO_RIGHT) {
+            add(buildLeftPanel(), BorderLayout.CENTER);
+            add(buildRightPanel(), BorderLayout.LINE_END);
+            add(buildBottomPanel(), BorderLayout.PAGE_END);
+        } else {
+            add(buildLeftPanel(), BorderLayout.CENTER);
+            add(buildRightPanel(), BorderLayout.LINE_START);
+            add(buildBottomPanel(), BorderLayout.PAGE_END);
+        }
+
+        ComponentOrientationUtils.setTextOrientationRecursion(this, currentTextOrientation);
     }
 
     @Override
-    public void rebuild() {
+    public void onChangeLocale(Locale locale) {
 		options = new CheckBoxPanel();
 		removeAll();
         build();
