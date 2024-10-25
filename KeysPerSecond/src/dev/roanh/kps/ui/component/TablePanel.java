@@ -92,14 +92,14 @@ public class TablePanel extends JPanel{
 		row.add(new JLabel(name, SwingConstants.CENTER));
 		
 		if(location){
-			row.add(new JLabel(Translator.translate("x"), SwingConstants.CENTER));
-			row.add(new JLabel(Translator.translate("y"), SwingConstants.CENTER));
-			row.add(new JLabel(Translator.translate("width"), SwingConstants.CENTER));
-			row.add(new JLabel(Translator.translate("height"), SwingConstants.CENTER));
+			row.add(new JLabel(Translator.translate("label.x"), SwingConstants.CENTER));
+			row.add(new JLabel(Translator.translate("label.y"), SwingConstants.CENTER));
+			row.add(new JLabel(Translator.translate("label.width"), SwingConstants.CENTER));
+			row.add(new JLabel(Translator.translate("label.height"), SwingConstants.CENTER));
 		}
 		
-		row.add(new JLabel(Translator.translate("settings"), SwingConstants.CENTER));
-		row.add(new JLabel(Translator.translate("delete"), SwingConstants.CENTER));
+		row.add(new JLabel(Translator.translate("label.settings"), SwingConstants.CENTER));
+		row.add(new JLabel(Translator.translate("label.delete"), SwingConstants.CENTER));
 		rows.add(row);
 	}
 	
@@ -159,7 +159,7 @@ public class TablePanel extends JPanel{
 		}
 
 		//edit
-		JButton edit = new JButton(Translator.translate("edit"));
+		JButton edit = new JButton(Translator.translate("label.edit"));
 		row.add(edit);
 		edit.addActionListener(e->{
 			info.showEditor(live);

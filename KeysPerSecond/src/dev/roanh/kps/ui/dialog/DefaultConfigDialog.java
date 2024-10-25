@@ -136,7 +136,7 @@ public class DefaultConfigDialog extends JPanel {
 	public static final void showDefaultConfigDialog(OnChangeLocale current) {
 		DefaultConfigDialog dialog = new DefaultConfigDialog();
 		try {
-			switch (Dialog.showDialog(dialog, new String[]{"Save", "Remove Default Config", "Cancel"})) {
+			switch (Dialog.showDialog(dialog, new String[]{"Save", "Remove Default Config", "action.cancel"})) {
 				case 0:
 					ConfigLoader.setDefaultConfig(Paths.get(dialog.selectedFile.getText()));
 

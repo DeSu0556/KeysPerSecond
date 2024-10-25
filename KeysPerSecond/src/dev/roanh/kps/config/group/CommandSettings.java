@@ -42,7 +42,7 @@ public class CommandSettings extends SettingGroup implements LegacyProxyStore{
 	/**
 	 * Exit command key.
 	 */
-	private final CommandKeySetting exit = new CommandKeySetting("exit", NativeKeyEvent.VC_U, false, true);
+	private final CommandKeySetting exit = new CommandKeySetting("action.exit", NativeKeyEvent.VC_U, false, true);
 	/**
 	 * Reset totals command key.
 	 */
@@ -54,7 +54,7 @@ public class CommandSettings extends SettingGroup implements LegacyProxyStore{
 	/**
 	 * Pause command key.
 	 */
-	private final CommandKeySetting pause = new CommandKeySetting("pause", NativeKeyEvent.VC_T, false, true);
+	private final CommandKeySetting pause = new CommandKeySetting("label.pause", NativeKeyEvent.VC_T, false, true);
 	/**
 	 * Reload configuration command key.
 	 */
@@ -64,7 +64,7 @@ public class CommandSettings extends SettingGroup implements LegacyProxyStore{
 	 * Constructs new command key settings.
 	 */
 	public CommandSettings(){
-		super("commands");
+		super("label.commands");
 	}
 	
 	/**

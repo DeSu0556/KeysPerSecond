@@ -37,11 +37,11 @@ public class PositionSettings extends SettingGroup implements LegacyProxyStore{
 	/**
 	 * The position x coordinate.
 	 */
-	private final IntSetting x = new IntSetting("x", 0, Integer.MAX_VALUE, 0);
+	private final IntSetting x = new IntSetting("label.x", 0, Integer.MAX_VALUE, 0);
 	/**
 	 * The position y coordinate.
 	 */
-	private final IntSetting y = new IntSetting("y", 0, Integer.MAX_VALUE, 0);
+	private final IntSetting y = new IntSetting("label.y", 0, Integer.MAX_VALUE, 0);
 	/**
 	 * If this setting was ever updated.
 	 */

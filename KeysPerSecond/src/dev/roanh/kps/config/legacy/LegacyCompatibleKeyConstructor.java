@@ -53,10 +53,10 @@ public class LegacyCompatibleKeyConstructor implements ListItemConstructor<KeyPa
 			Matcher m = LEGEACY_KEY_REGEX.matcher(data.get(0));
 			if(m.matches()){
 				info.put("keycode", m.group(1));
-				info.put("x", m.group(2));
-				info.put("y", m.group(3));
-				info.put("width", m.group(4));
-				info.put("height", m.group(5));
+				info.put("label.x", m.group(2));
+				info.put("label.y", m.group(3));
+				info.put("label.width", m.group(4));
+				info.put("label.height", m.group(5));
 				info.put("mode", m.group(6));
 				info.put("visible", m.group(7));
 				info.put("name", m.group(8));

@@ -59,22 +59,22 @@ public class CommandKeysDialog extends JPanel implements KeyPressListener{
 	private CommandKeysDialog(CommandSettings config){
 		super(new GridLayout(6, 2, 10, 2));
 
-		add(new JLabel(Translator.translate("reset_statistics") + ":"));
+		add(new JLabel(Translator.translate("label.reset.statistics") + ":"));
 		add(newButton(config.getCommandResetStats()));
 
-		add(new JLabel(Translator.translate("exit_the_program") + ":"));
+		add(new JLabel(Translator.translate("label.exit.program") + ":"));
 		add(newButton(config.getCommandExit()));
 
-		add(new JLabel(Translator.translate("reset_total") + ":"));
+		add(new JLabel(Translator.translate("label.reset.total") + ":"));
 		add(newButton(config.getCommandResetTotals()));
 
-		add(new JLabel(Translator.translate("show_or_hide_gui") + ":"));
+		add(new JLabel(Translator.translate("label.show.or.hide.gui") + ":"));
 		add(newButton(config.getCommandHide()));
 
-		add(new JLabel(Translator.translate("pause_or_resume") + ":"));
+		add(new JLabel(Translator.translate("label.pause.or.resume") + ":"));
 		add(newButton(config.getCommandPause()));
 
-		add(new JLabel(Translator.translate("reload_config") + ":"));
+		add(new JLabel(Translator.translate("label.reload.config") + ":"));
 		add(newButton(config.getCommandReload()));
 	}
 	
@@ -110,7 +110,7 @@ public class CommandKeysDialog extends JPanel implements KeyPressListener{
 	 */
 	private void askForNewKey(CommandKeySetting key){
 		JPanel form = new JPanel(new GridLayout(2, 1));
-		JLabel txt = new JLabel(Translator.translate("ask_which_key_want_to_add"));
+		JLabel txt = new JLabel(Translator.translate("label.which.key.want.to.add"));
 		lastKey = -1;
 		preview.setText(key.toDisplayString());
 		preview.setEditable(false);
@@ -118,7 +118,7 @@ public class CommandKeysDialog extends JPanel implements KeyPressListener{
 		form.add(txt);
 		form.add(preview);
 		
-		switch(Dialog.showDialog(form, new String[]{Translator.translate("save"), Translator.translate("unbind"), Translator.translate("cancel")})){
+		switch(Dialog.showDialog(form, new String[]{Translator.translate("action.save"), Translator.translate("action.unbind"), Translator.translate("cancel")})){
 		case 0:
 			final int code = lastKey;
 			if(code != -1){

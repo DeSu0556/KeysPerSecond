@@ -60,10 +60,10 @@ public abstract class LocationSettings extends SettingGroup implements LayoutPos
 	 */
 	protected LocationSettings(String key, int x, int y, int width, int height){
 		super(key);
-		this.x = new IntSetting("x", -1, Integer.MAX_VALUE, x);
-		this.y = new IntSetting("y", -1, Integer.MAX_VALUE, y);
-		this.width = new IntSetting("width", -1, Integer.MAX_VALUE, width);
-		this.height = new IntSetting("height", -1, Integer.MAX_VALUE, height);
+		this.x = new IntSetting("label.x", -1, Integer.MAX_VALUE, x);
+		this.y = new IntSetting("label.y", -1, Integer.MAX_VALUE, y);
+		this.width = new IntSetting("label.width", -1, Integer.MAX_VALUE, width);
+		this.height = new IntSetting("label.height", -1, Integer.MAX_VALUE, height);
 	}
 	
 	/**

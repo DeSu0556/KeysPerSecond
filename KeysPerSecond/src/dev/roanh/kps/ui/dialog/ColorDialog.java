@@ -63,17 +63,17 @@ public class ColorDialog extends JPanel{
 			}
 		});
 		
-		add(new JLabel(Translator.translate("enable_custom_colours") + ":"));
+		add(new JLabel(Translator.translate("label.enable.custom.colours") + ":"));
 		add(enable);
 		add(new JLabel());
 		
 		//foreground
-		JLabel lfg = new JLabel(Translator.translate("foreground_colours"));
+		JLabel lfg = new JLabel(Translator.translate("label.foreground.colour"));
 		ColorPicker cfg = new ColorPicker(config::getCustomForeground, config::setForeground, live);
 
 		JPanel spanelfg = new JPanel(new BorderLayout());
 		JSpinner sfg = new JSpinner(new SpinnerNumberModel(config.getCustomForeground().getAlpha() * 100.0D, 0.0D, 100.0D, 5.0D));
-		spanelfg.add(new JLabel(Translator.translate("opacity")), BorderLayout.LINE_START);
+		spanelfg.add(new JLabel(Translator.translate("label.opacity")), BorderLayout.LINE_START);
 		spanelfg.add(sfg, BorderLayout.CENTER);
 		sfg.addChangeListener(e->{
 			config.setForeground(new ThemeColor(config.getCustomForeground().getRGB(), (float)((double)sfg.getValue() / 100.0D)));
@@ -87,12 +87,12 @@ public class ColorDialog extends JPanel{
 		add(spanelfg);
 
 		//background
-		JLabel lbg = new JLabel(Translator.translate("background_colours"));
+		JLabel lbg = new JLabel(Translator.translate("label.background.colours"));
 		ColorPicker cbg = new ColorPicker(config::getCustomBackground, config::setBackground, live);
 
 		JPanel spanelbg = new JPanel(new BorderLayout());
 		JSpinner sbg = new JSpinner(new SpinnerNumberModel(config.getCustomBackground().getAlpha() * 100.0D, 0.0D, 100.0D, 5.0D));
-		spanelbg.add(new JLabel(Translator.translate("opacity")), BorderLayout.LINE_START);
+		spanelbg.add(new JLabel(Translator.translate("label.opacity")), BorderLayout.LINE_START);
 		spanelbg.add(sbg, BorderLayout.CENTER);
 		sbg.addChangeListener(e->{
 			config.setBackground(new ThemeColor(config.getCustomBackground().getRGB(), (float)((double)sbg.getValue() / 100.0D)));

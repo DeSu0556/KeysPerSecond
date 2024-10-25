@@ -193,7 +193,7 @@ public class Main{
 
 		//simple hello print
 		System.out.println(Translator.translate("name") + " " + VERSION);
-		System.out.println(Translator.translate("message.test"));
+		System.out.println(Translator.translate("label.test"));
 
 		//check for a passed config
 		String configPath = null;
