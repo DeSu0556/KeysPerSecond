@@ -30,6 +30,7 @@ import javax.swing.SpinnerNumberModel;
 import dev.roanh.kps.Main;
 import dev.roanh.kps.config.ThemeColor;
 import dev.roanh.kps.config.group.ThemeSettings;
+import dev.roanh.kps.translation.Translator;
 import dev.roanh.kps.ui.component.ColorPicker;
 import dev.roanh.util.Dialog;
 
@@ -62,17 +63,17 @@ public class ColorDialog extends JPanel{
 			}
 		});
 		
-		add(new JLabel("Enable custom colours: "));
+		add(new JLabel(Translator.translate("enable_custom_colours") + ":"));
 		add(enable);
 		add(new JLabel());
 		
 		//foreground
-		JLabel lfg = new JLabel("Foreground colour: ");
+		JLabel lfg = new JLabel(Translator.translate("foreground_colours"));
 		ColorPicker cfg = new ColorPicker(config::getCustomForeground, config::setForeground, live);
 
 		JPanel spanelfg = new JPanel(new BorderLayout());
 		JSpinner sfg = new JSpinner(new SpinnerNumberModel(config.getCustomForeground().getAlpha() * 100.0D, 0.0D, 100.0D, 5.0D));
-		spanelfg.add(new JLabel("Opacity (%): "), BorderLayout.LINE_START);
+		spanelfg.add(new JLabel(Translator.translate("opacity")), BorderLayout.LINE_START);
 		spanelfg.add(sfg, BorderLayout.CENTER);
 		sfg.addChangeListener(e->{
 			config.setForeground(new ThemeColor(config.getCustomForeground().getRGB(), (float)((double)sfg.getValue() / 100.0D)));
@@ -86,12 +87,12 @@ public class ColorDialog extends JPanel{
 		add(spanelfg);
 
 		//background
-		JLabel lbg = new JLabel("Background colour: ");
+		JLabel lbg = new JLabel(Translator.translate("background_colours"));
 		ColorPicker cbg = new ColorPicker(config::getCustomBackground, config::setBackground, live);
 
 		JPanel spanelbg = new JPanel(new BorderLayout());
 		JSpinner sbg = new JSpinner(new SpinnerNumberModel(config.getCustomBackground().getAlpha() * 100.0D, 0.0D, 100.0D, 5.0D));
-		spanelbg.add(new JLabel("Opacity (%): "), BorderLayout.LINE_START);
+		spanelbg.add(new JLabel(Translator.translate("opacity")), BorderLayout.LINE_START);
 		spanelbg.add(sbg, BorderLayout.CENTER);
 		sbg.addChangeListener(e->{
 			config.setBackground(new ThemeColor(config.getCustomBackground().getRGB(), (float)((double)sbg.getValue() / 100.0D)));
