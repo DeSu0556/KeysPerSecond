@@ -188,14 +188,14 @@ public class MainDialog extends JPanel implements OnChangeLocale {
         if (currentTextOrientation == ComponentOrientation.LEFT_TO_RIGHT) {
             add(buildLeftPanel(), BorderLayout.CENTER);
             add(buildRightPanel(), BorderLayout.LINE_END);
-            add(buildBottomPanel(), BorderLayout.PAGE_END);
         } else {
             add(buildLeftPanel(), BorderLayout.CENTER);
             add(buildRightPanel(), BorderLayout.LINE_START);
-            add(buildBottomPanel(), BorderLayout.PAGE_END);
         }
 
         ComponentOrientationUtils.setTextOrientationRecursion(this, currentTextOrientation);
+//		do not set the bottom panel text orientation
+		add(buildBottomPanel(), BorderLayout.PAGE_END);
     }
 
     @Override
